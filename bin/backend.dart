@@ -3,6 +3,7 @@ import 'package:shelf/shelf.dart';
 import 'apis/blog_api.dart';
 import 'apis/login_api.dart';
 import 'infra/custom_server.dart';
+import 'services/news_services.dart';
 import 'utils/custom_env.dart';
 
 void main() async {
@@ -11,7 +12,9 @@ void main() async {
       .add(
         (LoginApi().handler),
       )
-      .add(BlogApi().handler)
+      .add(BlogApi(
+        NewsService(),
+      ).handler)
       .handler;
 
   var handler =
