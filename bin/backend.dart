@@ -24,10 +24,7 @@ void main() async {
   var cascadeHandler = Cascade()
       .add(LoginApi(_securityService).getHandler())
       .add(BlogApi(NewsService()).getHandler(
-        middlewares: [
-          _securityService.authorization,
-          _securityService.verifyJwt
-        ],
+        isSecurity: true,
       ))
       .handler;
 
