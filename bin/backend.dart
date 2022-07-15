@@ -13,25 +13,21 @@ void main() async {
   CustomEnv.fromFile('.env-dev');
   SecurityService _securityService = SecurityServiceImpl();
   var cascadeHandler = Cascade()
-      .add(
-        (LoginApi(_securityService).handler),
-      )
-      .add(BlogApi(
-        NewsService(),
-      ).handler)
+      .add(LoginApi(_securityService).getHandler())
+      .add(BlogApi(NewsService()).getHandler(
+        middlewares: [
+          _securityService.authorization,
+          _securityService.verifyJwt
+        ],
+      ))
       .handler;
 
   var handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(MiddlewareInterception().middlerware)
-      .addMiddleware(_securityService.authorization)
-      .addMiddleware((_securityService.verifyJwt))
       .addHandler(cascadeHandler);
   await CustomServer().initialize(
       handler: handler,
       address: await CustomEnv.get<String>(key: 'server_address'),
       port: await CustomEnv.get<int>(key: 'server_port'));
-
-  String teste = "84";
-  teste.endsWith("4");
 }

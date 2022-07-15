@@ -5,14 +5,16 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../models/news_model.dart';
 import '../services/generic_service.dart';
+import 'api.dart';
 
-class BlogApi {
+class BlogApi extends Api {
   final GenericService<NewsModel> _service;
 
   BlogApi(this._service);
-  Handler get handler {
-    Router router = Router();
 
+  @override
+  Handler getHandler({List<Middleware>? middlewares}) {
+    Router router = Router();
     router.get('/blog/noticias', (Request req) {
       List<NewsModel> news = _service.findAll();
       if (news.isEmpty) {
@@ -42,7 +44,9 @@ class BlogApi {
       String? id = req.url.queryParameters['id'];
       return Response.ok('Choveu hoje');
     });
-
-    return router;
+    return createHandler(
+      router: router,
+      middlewares: middlewares,
+    );
   }
 }
