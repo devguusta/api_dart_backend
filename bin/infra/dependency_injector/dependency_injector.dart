@@ -42,6 +42,7 @@ class _InstanceGenerator<T> {
       _instance = _instanceCreator();
       _isFirstGet = false;
     }
+
     return _instance ?? _instanceCreator();
   }
 }
