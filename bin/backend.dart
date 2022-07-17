@@ -1,3 +1,4 @@
+import 'package:mysql1/mysql1.dart';
 import 'package:shelf/shelf.dart';
 
 import 'apis/blog_api.dart';
@@ -9,7 +10,15 @@ import 'utils/custom_env.dart';
 
 void main() async {
   CustomEnv.fromFile('.env-dev');
-
+  var settings = ConnectionSettings(
+      host: await CustomEnv.get<String>(key: 'db_host'),
+      port: await CustomEnv.get<int>(key: 'db_port'),
+      user: await CustomEnv.get<String>(key: 'db_user'),
+      password: await CustomEnv.get<String>(key: 'db_pass'),
+      db: await CustomEnv.get<String>(key: 'db_schema'));
+  var conn = await MySqlConnection.connect(settings);
+  var result = await conn.query('SELECT * FROM usuarios');
+  print(result);
   final _di = Injects.initialize();
 
   var cascadeHandler = Cascade()
