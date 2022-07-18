@@ -2,7 +2,7 @@ import 'package:shelf/shelf.dart';
 
 import 'apis/blog_api.dart';
 import 'apis/login_api.dart';
-import 'dao/user_model.dart';
+import 'dao/user_dao.dart';
 import 'infra/custom_server.dart';
 import 'infra/database/db_configuration.dart';
 import 'infra/dependency_injector/injects.dart';
