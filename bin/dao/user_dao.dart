@@ -9,40 +9,47 @@ class UserDAO implements DAO<UserModel> {
 
   UserDAO(this._dbConfiguration);
   @override
-  Future create(UserModel value) async {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<bool> create(UserModel value) async {
+    var result = await _executeQuery(
+        'INSERT INTO usuarios (nome,email, password) VALUES (?,?,?)',
+        [value.name, value.email, value.password]);
+
+    return result.affectedRows > 0;
   }
 
   @override
-  Future delete(int id) async {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<bool> delete(int id) async {
+    var result = await _executeQuery('DELETE from usuarios where id = ?', [id]);
+
+    return result.affectedRows > 0;
   }
 
   @override
   Future<List<UserModel>> findAll() async {
-    final String SQL = 'SELECT * FROM usuarios';
-    var connection = await _dbConfiguration.connection;
-    Results result = await connection.query(SQL);
+    Results result = await _executeQuery('SELECT * FROM usuarios');
     return (result).map((e) => UserModel.fromMap(e.fields)).toList();
   }
 
   @override
-  Future<UserModel> findOne(int id) async {
-    final String SQL = 'SELECT * FROM usuarios where id = ?';
-    var connection = await _dbConfiguration.connection;
-    var result = await connection.query(SQL, [id]);
-    if (result.length <= 0) {
-      throw Exception('[ERROR/DB] -> findOne for id $id, Not found');
-    }
+  Future<UserModel?> findOne(int id) async {
+    var result = _executeQuery('SELECT * FROM usuarios where id = ?', [id]);
 
-    return UserModel.fromMap(result.first.fields);
+    return result.affectedRows > 0
+        ? UserModel.fromMap(result.first.fields)
+        : null;
   }
 
   @override
-  Future update(UserModel value) async {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<bool> update(UserModel value) async {
+    var result = await _executeQuery(
+        'UPDATE usuarios set nome = ?, password = ? where id = ?',
+        [value.name, value.password, value.id]);
+
+    return result.affectedRows > 0;
+  }
+
+  _executeQuery(String sql, [List? params]) async {
+    var connection = await _dbConfiguration.connection;
+    return await connection.query(sql, params);
   }
 }

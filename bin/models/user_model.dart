@@ -2,20 +2,23 @@
 import 'dart:convert';
 
 class UserModel {
-  final int id;
-  final String name;
-  final String email;
-  final bool isActived;
-  final DateTime dtCreated;
-  final DateTime dtUpdated;
-  UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.isActived,
-    required this.dtCreated,
-    required this.dtUpdated,
-  });
+  int? id;
+  String? name;
+  String? email;
+  String? password;
+  bool? isActived;
+  DateTime? dtCreated;
+  DateTime? dtUpdated;
+  UserModel.create(
+    this.id,
+    this.name,
+    this.email,
+    this.isActived,
+    this.dtCreated,
+    this.dtUpdated,
+  );
+
+  UserModel();
 
   UserModel copyWith({
     int? id,
@@ -25,38 +28,25 @@ class UserModel {
     DateTime? dtCreated,
     DateTime? dtUpdated,
   }) {
-    return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      isActived: isActived ?? this.isActived,
-      dtCreated: dtCreated ?? this.dtCreated,
-      dtUpdated: dtUpdated ?? this.dtUpdated,
+    return UserModel.create(
+      id ?? this.id,
+      name ?? this.name,
+      email ?? this.email,
+      isActived ?? this.isActived,
+      dtCreated ?? this.dtCreated,
+      dtUpdated ?? this.dtUpdated,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'email': email,
-      'isActived': isActived,
-      'dtCreated': dtCreated.millisecondsSinceEpoch,
-      'dtUpdated': dtUpdated.millisecondsSinceEpoch,
-    };
-  }
-
   factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-        id: map['id'] as int,
-        name: map['nome'] as String,
-        email: map['email'] as String,
-        isActived: map['is_ativo'] as int == 1 ? true : false,
-        dtCreated: map['dt_criacao'],
-        dtUpdated: map['dt_autalizacao']);
+    return UserModel.create(
+        map['id'] as int,
+        map['nome'] as String,
+        map['email'] as String,
+        map['is_ativo'] as int == 1 ? true : false,
+        map['dt_criacao'],
+        map['dt_autalizacao']);
   }
-
-  String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);

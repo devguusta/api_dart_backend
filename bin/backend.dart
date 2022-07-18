@@ -7,17 +7,25 @@ import 'infra/custom_server.dart';
 import 'infra/database/db_configuration.dart';
 import 'infra/dependency_injector/injects.dart';
 import 'infra/middleware_interception.dart';
+import 'models/user_model.dart';
 import 'utils/custom_env.dart';
 
 void main() async {
   CustomEnv.fromFile('.env-dev');
 
   final _di = Injects.initialize();
-  var connection = await _di.get<DbConfiguration>().connection;
 
   UserDAO _userDAO = UserDAO(_di<DbConfiguration>());
+
+  var user = UserModel()
+    ..id = 5
+    ..name = "Augusto Candido"
+    ..email = "xpto@gmail.com"
+    ..password = '1234';
+  // print(await _userDAO.create(user));
   print(await _userDAO.findAll());
-  await _userDAO.findOne(2);
+  // print(await _userDAO.update(user));
+  // print(await _userDAO.delete(user.id!));
 
   var cascadeHandler = Cascade()
       .add(_di.get<LoginApi>().getHandler())

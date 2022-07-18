@@ -1,7 +1,7 @@
 abstract class DAO<T> {
-  Future<dynamic> create(T value);
-  Future<T> findOne(int id);
+  Future<bool> create(T value);
+  Future<T?> findOne(int id);
   Future<List<T>> findAll();
-  Future<dynamic> update(T value);
-  Future<dynamic> delete(int id);
+  Future<bool> update(T value);
+  Future<bool> delete(int id);
 }
