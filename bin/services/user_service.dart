@@ -1,3 +1,5 @@
+import 'package:password_dart/password_dart.dart';
+
 import '../dao/user_dao.dart';
 import '../models/user_model.dart';
 import 'generic_service.dart';
@@ -26,6 +28,8 @@ class UserService implements GenericService<UserModel> {
     if (value.id != null) {
       return _userDAO.update(value);
     } else {
+      final hash = Password.hash(value.password!, PBKDF2());
+      value.password = hash;
       return _userDAO.create(value);
     }
   }
