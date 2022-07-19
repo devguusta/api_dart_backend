@@ -48,6 +48,13 @@ class UserModel {
         map['dt_autalizacao']);
   }
 
+  factory UserModel.fromRequest(Map<String, dynamic> map) {
+    return UserModel()
+      ..name = map['name']
+      ..email = map['email']
+      ..password = map['password'];
+  }
+
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 

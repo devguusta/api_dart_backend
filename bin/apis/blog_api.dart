@@ -20,8 +20,8 @@ class BlogApi extends Api {
     bool isSecurity = false,
   }) {
     Router router = Router();
-    router.get('/blog/noticias', (Request req) {
-      List<NewsModel> news = _service.findAll();
+    router.get('/blog/noticias', (Request req) async {
+      List<NewsModel> news = await _service.findAll();
       if (news.isEmpty) {
         return Response(201, body: "No content");
       }
