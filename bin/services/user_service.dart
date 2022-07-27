@@ -33,4 +33,7 @@ class UserService implements GenericService<UserModel> {
       return _userDAO.create(value);
     }
   }
+
+  Future<UserModel?> findByEmail(String email) async =>
+      await _userDAO.findByEmail(email);
 }

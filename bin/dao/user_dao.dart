@@ -48,6 +48,13 @@ class UserDAO implements DAO<UserModel> {
     return result.affectedRows > 0;
   }
 
+  Future<UserModel?> findByEmail(String email) async {
+    var result =
+        await _executeQuery('select * from usuarios where email = ?', [email]);
+
+    return result.isNotEmpty ? UserModel.fromEmail(result.first.fields) : null;
+  }
+
   _executeQuery(String sql, [List? params]) async {
     var connection = await _dbConfiguration.connection;
     return await connection.query(sql, params);
