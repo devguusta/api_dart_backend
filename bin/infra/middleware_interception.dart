@@ -1,9 +1,12 @@
 import 'package:shelf/shelf.dart';
 
 class MiddlewareInterception {
-  Middleware get middlerware {
-    return createMiddleware(responseHandler: (Response res) {
-      return res.change(headers: {'contet-type': 'application/json'});
-    });
-  }
+  Middleware get middlerware => createMiddleware(
+        responseHandler: (Response res) => res.change(
+          headers: {
+            'content-type': 'application/json',
+            'xpto': '123',
+          },
+        ),
+      );
 }

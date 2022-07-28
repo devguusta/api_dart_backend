@@ -10,7 +10,7 @@ class UserDAO implements DAO<UserModel> {
   UserDAO(this._dbConfiguration);
   @override
   Future<bool> create(UserModel value) async {
-    var result = await _executeQuery(
+    var result = await _dbConfiguration.execQuery(
         'INSERT INTO usuarios (nome,email, password) VALUES (?,?,?)',
         [value.name, value.email, value.password]);
 
@@ -19,20 +19,22 @@ class UserDAO implements DAO<UserModel> {
 
   @override
   Future<bool> delete(int id) async {
-    var result = await _executeQuery('DELETE from usuarios where id = ?', [id]);
+    var result = await _dbConfiguration
+        .execQuery('DELETE from usuarios where id = ?', [id]);
 
     return result.affectedRows > 0;
   }
 
   @override
   Future<List<UserModel>> findAll() async {
-    Results result = await _executeQuery('SELECT * FROM usuarios');
+    Results result = await _dbConfiguration.execQuery('SELECT * FROM usuarios');
     return (result).map((e) => UserModel.fromMap(e.fields)).toList();
   }
 
   @override
   Future<UserModel?> findOne(int id) async {
-    var result = _executeQuery('SELECT * FROM usuarios where id = ?', [id]);
+    var result =
+        _dbConfiguration.execQuery('SELECT * FROM usuarios where id = ?', [id]);
 
     return result.affectedRows > 0
         ? UserModel.fromMap(result.first.fields)
@@ -41,7 +43,7 @@ class UserDAO implements DAO<UserModel> {
 
   @override
   Future<bool> update(UserModel value) async {
-    var result = await _executeQuery(
+    var result = await _dbConfiguration.execQuery(
         'UPDATE usuarios set nome = ?, password = ? where id = ?',
         [value.name, value.password, value.id]);
 
@@ -49,14 +51,9 @@ class UserDAO implements DAO<UserModel> {
   }
 
   Future<UserModel?> findByEmail(String email) async {
-    var result =
-        await _executeQuery('select * from usuarios where email = ?', [email]);
+    var result = await _dbConfiguration
+        .execQuery('select * from usuarios where email = ?', [email]);
 
     return result.isNotEmpty ? UserModel.fromEmail(result.first.fields) : null;
-  }
-
-  _executeQuery(String sql, [List? params]) async {
-    var connection = await _dbConfiguration.connection;
-    return await connection.query(sql, params);
   }
 }
